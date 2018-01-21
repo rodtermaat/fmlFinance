@@ -556,7 +556,9 @@ public ArrayList<Transaction> getTransactionsByDate(Date date1, Date date30){
     // Returns a summary by Category of the amount for a time period
     public ArrayList<CatSummary> GetCatSummary(Date date1, Date date30){
         String sql = "SELECT category, SUM(amount) AS totAmt FROM ledger\n" +
-                 " WHERE amount > 0 and date >= ? and date <= ?";
+                 " WHERE amount < 0 and\n" +
+                 " date > ? and date <= ? GROUP BY category\n" +
+                 " ORDER BY amount";
 
         ArrayList<CatSummary> CatSum = new ArrayList<>();
                     // create an ArrayList of the Transaction object and creates
