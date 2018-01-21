@@ -77,15 +77,42 @@ public class fmlUi extends javax.swing.JFrame {
     public fmlUi() {
         initComponents();
         model = (DefaultTableModel) tblLedger.getModel();
-        rdoShowAll.setSelected(true);
-        ListTransactions();
-        rdoShowAll.setSelected(true);
-        rdoByMonth.setSelected(false);
+        
+        //Set starting date ranges
+        java.sql.Date fomDate = Freaky.getActualFOM(0);
+        java.sql.Date eomDate = Freaky.getEOM(0);
+        java.sql.Date fomSQL = Freaky.getFOM(-1);
+        
+        //fill ledger and set radio buttons
+        ListTransactionsNew(fomSQL, eomDate);
+        rdoByMonth.setSelected(true);
+        rdoShowAll.setSelected(false);
         rdoByWeek.setSelected(false);
         
+        //Analytics date range
+        lblFirstDay.setText(String.valueOf(fomDate));
+        lblLastDay.setText(String.valueOf(eomDate));
         
-        // see of the db is already set up
-        // 0 means there is no table
+        //Analytics balances
+        int row = (tblLedger.getRowCount() -1);
+        if(row>0){
+        lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+        lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+        }
+        
+        //Analytics summary
+        int groceries = 0; int dining = 0; int gas = 0; int unplanned = 0;
+        groceries = sqlite.getCategorySum(fomSQL, eomDate, "Groceries");
+        dining = sqlite.getCategorySum(fomSQL, eomDate, "Dining");
+        gas = sqlite.getCategorySum(fomSQL, eomDate, "Auto");
+        unplanned = sqlite.getCategorySum(fomSQL, eomDate, "Unplanned");
+        lblGroceries.setText(String.valueOf(groceries));
+        lblDining.setText(String.valueOf(dining));
+        lblGas.setText(String.valueOf(gas));
+        lblUnplanned.setText(String.valueOf(unplanned));
+        
+        
+        // see of the db is already set up.  0 means there is no table
         int isReady = sqlite.IsAcctSetup();
         if(isReady == 0){
             sqlite.createDB();
@@ -106,9 +133,7 @@ public class fmlUi extends javax.swing.JFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         lblCurrentBal = new javax.swing.JLabel();
-        lblForecastBal = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblLedger = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
@@ -117,10 +142,6 @@ public class fmlUi extends javax.swing.JFrame {
         rdoByWeek = new javax.swing.JRadioButton();
         btnPrev = new javax.swing.JButton();
         btnNext = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        lblForecastDate = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         txtAmount = new javax.swing.JTextField();
@@ -141,12 +162,22 @@ public class fmlUi extends javax.swing.JFrame {
         rdoExpense = new javax.swing.JRadioButton();
         lblDebug = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         lblFirstDay = new javax.swing.JLabel();
         lblLastDay = new javax.swing.JLabel();
         JPanelPie = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        lblStartingBal = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        lblEndingBal = new javax.swing.JLabel();
+        lblGroceries = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        lblDining = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        lblGas = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        lblUnplanned = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -155,13 +186,11 @@ public class fmlUi extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         jLabel1.setText("Today...$");
 
-        jLabel2.setText("|  Forecasted Balance as of");
-
-        lblCurrentBal.setBackground(new java.awt.Color(102, 255, 102));
-        lblCurrentBal.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        lblCurrentBal.setBackground(new java.awt.Color(255, 204, 0));
+        lblCurrentBal.setFont(new java.awt.Font("Lucida Grande", 1, 18)); // NOI18N
+        lblCurrentBal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCurrentBal.setText("$1250");
-
-        lblForecastBal.setText("$2125");
+        lblCurrentBal.setOpaque(true);
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(300, 200));
         jScrollPane2.setSize(new java.awt.Dimension(300, 200));
@@ -238,10 +267,6 @@ public class fmlUi extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Details");
-
-        jLabel9.setText("--------");
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -249,14 +274,10 @@ public class fmlUi extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel9)
-                            .addComponent(rdoShowAll)
-                            .addComponent(rdoByMonth)
-                            .addComponent(rdoByWeek))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(rdoShowAll)
+                    .addComponent(rdoByMonth)
+                    .addComponent(rdoByWeek))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(btnPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,26 +288,18 @@ public class fmlUi extends javax.swing.JFrame {
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(35, 35, 35)
                 .addComponent(rdoShowAll)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rdoByMonth)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rdoByWeek)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rdoByMonth)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rdoByWeek)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPrev)
                     .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(160, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        lblForecastDate.setText("2018-03-03");
-
-        jLabel13.setText("... $");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -299,14 +312,7 @@ public class fmlUi extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblCurrentBal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblForecastDate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblForecastBal))
+                        .addGap(341, 341, 341))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 575, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -319,13 +325,9 @@ public class fmlUi extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(lblCurrentBal)
-                            .addComponent(lblForecastBal)
-                            .addComponent(lblForecastDate)
-                            .addComponent(jLabel13))
+                            .addComponent(lblCurrentBal))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -350,10 +352,14 @@ public class fmlUi extends javax.swing.JFrame {
         txtName.setToolTipText("Enter a name for the item");
         txtName.setMinimumSize(new java.awt.Dimension(150, 26));
 
-        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deposit", "House", "Living", "Debt", "Utilities", "Savings", "Cash", "Auto", "Food", "Unplanned", "Salary", "Transfer", "Insurance", "Open", "Adjustment" }));
-        cmbCategory.setSelectedIndex(-1);
+        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deposit", "Housing", "Living", "Debt", "Savings", "Cash", "Auto", "Groceries", "Dining", "Unplanned", "Salary", "Transfer", "Open", "Adjustment" }));
         cmbCategory.setToolTipText("");
         cmbCategory.setMinimumSize(new java.awt.Dimension(125, 27));
+        cmbCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCategoryActionPerformed(evt);
+            }
+        });
 
         jLabel7.setText("Category");
 
@@ -505,15 +511,12 @@ public class fmlUi extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Analytics", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N
 
-        jLabel11.setIcon(new javax.swing.ImageIcon("/Users/termaat/Downloads/small-pie-chart.png")); // NOI18N
+        jLabel14.setText("-");
 
-        jLabel12.setText("starting at");
+        lblFirstDay.setText("2018-10-31");
+        lblFirstDay.setToolTipText("");
 
-        jLabel14.setText("ending on");
-
-        lblFirstDay.setText("jLabel15");
-
-        lblLastDay.setText("jLabel15");
+        lblLastDay.setText("2018-11-30");
 
         javax.swing.GroupLayout JPanelPieLayout = new javax.swing.GroupLayout(JPanelPie);
         JPanelPie.setLayout(JPanelPieLayout);
@@ -526,28 +529,71 @@ public class fmlUi extends javax.swing.JFrame {
             .addGap(0, 156, Short.MAX_VALUE)
         );
 
+        jLabel4.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        jLabel4.setText("Starting Bal...$");
+
+        lblStartingBal.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        lblStartingBal.setText("15000");
+
+        jLabel11.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
+        jLabel11.setText("Ending Bal....$");
+
+        lblEndingBal.setFont(new java.awt.Font("Lucida Grande", 0, 16)); // NOI18N
+        lblEndingBal.setText("32000");
+
+        lblGroceries.setText("500");
+
+        jLabel3.setText("Groceries");
+
+        lblDining.setText("150");
+
+        jLabel10.setText("Dining");
+
+        lblGas.setText("100");
+
+        jLabel13.setText("Auto");
+
+        lblUnplanned.setText("425");
+
+        jLabel16.setText("Unplanned");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabel11)
-                .addGap(0, 12, Short.MAX_VALUE))
+            .addComponent(JPanelPie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(JPanelPie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblStartingBal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(lblFirstDay)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblLastDay)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblEndingBal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblFirstDay))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblLastDay)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(lblGroceries)
+                            .addComponent(lblDining)
+                            .addComponent(lblGas)
+                            .addComponent(lblUnplanned))
+                        .addGap(18, 18, 18)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -555,16 +601,35 @@ public class fmlUi extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(lblFirstDay))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFirstDay)
                     .addComponent(jLabel14)
                     .addComponent(lblLastDay))
-                .addGap(18, 18, 18)
-                .addComponent(JPanelPie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(lblStartingBal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(lblEndingBal))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblGroceries)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDining)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblGas)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUnplanned)
+                    .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel11))
+                .addComponent(JPanelPie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -718,31 +783,6 @@ public class fmlUi extends javax.swing.JFrame {
         return mdydate;
     }
     
-    // takes a string date in mdy and returns if that date is 
-    // greater than today.  used in balance calculations
-    /**
-    private String IsDateToday(String mdydate){
-        java.util.Date date;
-        
-        SimpleDateFormat formatDate = new SimpleDateFormat("MM/dd/yy");
-        
-        try
-        {
-          date = formatDate.parse(mdydate);
-        }
-        catch(ParseException e) {
-            String error = "ERROR";
-            return error;
-        }
-        
-        if(date.after(today)){
-            return "GREATER";
-        }
-        else{
-            return"NOTGREATER";
-        }
-    }
-    **/
     
     private void btnDoItActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDoItActionPerformed
         java.util.Date date;
@@ -873,17 +913,20 @@ public class fmlUi extends javax.swing.JFrame {
         rdoShowAll.setSelected(false);
         rdoByWeek.setSelected(false);
         
-        //get last day of the current month
         java.sql.Date eomDate = Freaky.getEOM(0);
+        java.sql.Date fomSQL = Freaky.getFOM(-1);
+        java.sql.Date fomDate = Freaky.getActualFOM(0);
         
-        //get last day of previous month
-        java.sql.Date fomDate = Freaky.getFOM(-1);
+        lblFirstDay.setText(String.valueOf(fomDate));
+        lblLastDay.setText(String.valueOf(eomDate));
         
-        lblFirstDay.setText("-  " + fomDate);
-        lblLastDay.setText(" - " + eomDate);
+        ListTransactionsNew(fomSQL, eomDate);
         
-        ListTransactionsNew(fomDate, eomDate);
-        
+        int row = (tblLedger.getRowCount() -1);
+        if(row>0){
+        lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+        lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+        }
     }//GEN-LAST:event_rdoByMonthActionPerformed
     // show Transactions for the current week
     private void rdoByWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoByWeekActionPerformed
@@ -891,39 +934,18 @@ public class fmlUi extends javax.swing.JFrame {
         
         java.sql.Date eowDate = Freaky.getEOW(8);
         java.sql.Date fowDate = Freaky.getFOW(8);
-        
-        //lblFirstDay.setText("-  " + fomDate);
-        //lblLastDay.setText(" - " + eowDate);
-        
-        //int dayofweek = 0;
-        
-        //get current day
-        //Calendar cal = Calendar.getInstance();
-        //dayofweek = cal.get(Calendar.DAY_OF_WEEK);
-
-        //we want the last day to be monday of the next week so we can
-        //return sunday in the list
-        //int lastdaymodifier = 8 - dayofweek;
-        
-        //add this number to calender to get the last date of the week
-        //cal.add(Calendar.DAY_OF_WEEK,  + lastdaymodifier +1);
-        
-        //java.util.Date lastDateOfWeek = cal.getTime();
-        //java.sql.Date sqlDate7 = new java.sql.Date(lastDateOfWeek.getTime());
-        //-------------------------
-         // to get the previous date we need to subtract  days        
-        //int firstdaymodifier = dayofweek - 1;
-        
-        //cal.add(Calendar.DAY_OF_WEEK,  - 8);
-        
-        //java.util.Date firstDateOfWeek = cal.getTime();
-        //java.sql.Date sqlDate1 = new java.sql.Date(firstDateOfWeek.getTime());
          
-        lblFirstDay.setText("-  " + fowDate);
-        lblLastDay.setText(" - " + eowDate);
+        lblFirstDay.setText(String.valueOf(fowDate));
+        lblLastDay.setText(String.valueOf(eowDate));
         
         ListTransactionsNew(fowDate, eowDate);
         
+        
+        int row = (tblLedger.getRowCount() -1);
+        if(row>0){
+        lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+        lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+        }
     }//GEN-LAST:event_rdoByWeekActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
@@ -933,16 +955,21 @@ public class fmlUi extends javax.swing.JFrame {
         
             monTracker++;
             
-            //get last day of the current month
             java.sql.Date eomDate = Freaky.getEOM(monTracker);
+            java.sql.Date fomSQL = Freaky.getFOM(monTracker-1);
+            java.sql.Date fomDate = Freaky.getActualFOM(monTracker);
             
-            //get last day of previous month
-            java.sql.Date fomDate = Freaky.getFOM(monTracker-1);
-            
-            lblFirstDay.setText("-  " + fomDate);
-            lblLastDay.setText(" - " + eomDate);
+            lblFirstDay.setText(String.valueOf(fomDate));
+            lblLastDay.setText(String.valueOf(eomDate));
         
-            ListTransactionsNew(fomDate, eomDate);   
+            ListTransactionsNew(fomSQL, eomDate);   
+            
+            
+            int row = (tblLedger.getRowCount() -1);
+            if(row>0){
+            lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+            lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+            }
         }
         if (rdoByWeek.isSelected()){
             
@@ -950,11 +977,17 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date eowDate = Freaky.getEOW(weekTracker-1);
             java.sql.Date fowDate = Freaky.getFOW(weekTracker);
             
-            lblFirstDay.setText("-  " + fowDate);
-            lblLastDay.setText(" - " + eowDate);
+            lblFirstDay.setText(String.valueOf(fowDate));
+            lblLastDay.setText(String.valueOf(eowDate));
             
             ListTransactionsNew(fowDate, eowDate);
             
+            
+            int row = (tblLedger.getRowCount() -1);
+            if(row>0){
+            lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+            lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+            }
         }
         
     }//GEN-LAST:event_btnNextActionPerformed
@@ -966,26 +999,21 @@ public class fmlUi extends javax.swing.JFrame {
         if(rdoByMonth.isSelected()){
             monTracker--;
         
-            //get last day of the current month
             java.sql.Date eomDate = Freaky.getEOM(monTracker);
-            //Calendar cal = Calendar.getInstance();
-            //cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
-            //cal.add(Calendar.MONTH, + monTracker);
-            //java.util.Date lastDayOfMonth = cal.getTime();
-            //java.sql.Date sqlDate30 = new java.sql.Date(lastDayOfMonth.getTime());
+            java.sql.Date fomSQL = Freaky.getFOM(monTracker-1);
+            java.sql.Date fomDate = Freaky.getActualFOM(monTracker);
         
-            //get last day of previous month
-            java.sql.Date fomDate = Freaky.getFOM(monTracker-1);
-            //Calendar cal1 = Calendar.getInstance();
-            //cal1.set(Calendar.DATE, cal1.getActualMaximum(Calendar.DATE));
-            //cal1.add(Calendar.MONTH, + (monTracker-1));
-            //java.util.Date lastDayOfLastMonth = cal1.getTime();
-            //java.sql.Date sqlDate1 = new java.sql.Date(lastDayOfLastMonth.getTime());
-        
-            lblFirstDay.setText("-  " + fomDate);
-            lblLastDay.setText(" - " + eomDate);
+            lblFirstDay.setText(String.valueOf(fomDate));
+            lblLastDay.setText(String.valueOf(eomDate));
             
-            ListTransactionsNew(fomDate, eomDate);
+            ListTransactionsNew(fomSQL, eomDate);
+            
+           
+            int row = (tblLedger.getRowCount() -1);
+            if(row>0){
+            lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+            lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+            }
         }
         if (rdoByWeek.isSelected()){
             
@@ -993,12 +1021,22 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date eowDate = Freaky.getEOW(weekTracker-1);
             java.sql.Date fowDate = Freaky.getFOW(weekTracker);
             
-            lblFirstDay.setText("-  " + fowDate);
-            lblLastDay.setText(" - " + eowDate);
+            lblFirstDay.setText(String.valueOf(fowDate));
+            lblLastDay.setText(String.valueOf(eowDate));
             ListTransactionsNew(fowDate, eowDate);
             
+            
+            int row = (tblLedger.getRowCount() -1);
+            if(row>0){
+            lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+            lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+            }
         }
     }//GEN-LAST:event_btnPrevActionPerformed
+
+    private void cmbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbCategoryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1037,16 +1075,13 @@ public class fmlUi extends javax.swing.JFrame {
     
     
     
-    private void ListTransactionsNew(Date date1, Date date30){
-      String stringDatex = sdf.format(date30.getTime());
-      lblForecastDate.setText(stringDatex);
-      lblForecastBal.setText(String.valueOf(sqlite.GetBalance(date30)));
+    private void ListTransactionsNew(Date date1, Date dateTo){
       lblCurrentBal.setText(String.valueOf(sqlite.GetBalance(sqlToday)));
      
       //remove all the rows currently in the table
       model.setRowCount(0);
       
-      ArrayList<Transaction> ledgerList = sqlite.getTransactionsByDate(date1, date30);
+      ArrayList<Transaction> ledgerList = sqlite.getTransactionsByDate(date1, dateTo);
       
       Object rowData[] = new Object[6];
       for(int i = 0; i < ledgerList.size(); i++)
@@ -1065,8 +1100,8 @@ public class fmlUi extends javax.swing.JFrame {
     
     private void ListTransactions(){
       lblCurrentBal.setText(String.valueOf(sqlite.GetBalance(sqlToday)));
-      lblForecastDate.setText(futureDatex);
-      lblForecastBal.setText(String.valueOf(sqlite.GetBalance(sqlFutureDate)));
+      //lblForecastDate.setText(futureDatex);
+      //lblEndingBal.setText(String.valueOf(sqlite.GetBalance(sqlFutureDate)));
      
       //remove all the rows currently in the table
       model.setRowCount(0);
@@ -1092,12 +1127,13 @@ public class fmlUi extends javax.swing.JFrame {
         
         // get the data from SQlite
         java.sql.Date eomDate = Freaky.getEOM(0);
-        java.sql.Date fomDate = Freaky.getFOM(-1);
-        ArrayList<CatSummary> catList = sqlite.GetCatSummary(fomDate, eomDate);
-        String data[][] = new String[6][2];
+        java.sql.Date fomSQL = Freaky.getFOM(-1);
+        ArrayList<CatSummary> catList = sqlite.GetCatSummary(fomSQL, eomDate);
+        int ai = catList.size();
+        String data[][] = new String[ai][2];
         //Object rowData[] = new Object[2];
-      for(int i = 0; i < 6; i++){
-          for(int j = 0; j < data[i].length; j++){
+      for(int i = 0; i < ai; i++){
+          for(int j = 0; j < data[2].length; j++){
               data[i][0] = catList.get(i).getCategory();
               int temp = catList.get(i).getAmount();
               data[i][1] = String.valueOf(temp);
@@ -1225,17 +1261,17 @@ public class fmlUi extends javax.swing.JFrame {
     private javax.swing.JCheckBox cbRepeater;
     private javax.swing.JComboBox<String> cmbCategory;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1243,11 +1279,15 @@ public class fmlUi extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblCurrentBal;
     private javax.swing.JLabel lblDebug;
+    private javax.swing.JLabel lblDining;
+    private javax.swing.JLabel lblEndingBal;
     private javax.swing.JLabel lblFirstDay;
-    private javax.swing.JLabel lblForecastBal;
-    private javax.swing.JLabel lblForecastDate;
+    private javax.swing.JLabel lblGas;
+    private javax.swing.JLabel lblGroceries;
     private javax.swing.JLabel lblLastDay;
     private javax.swing.JLabel lblMessage;
+    private javax.swing.JLabel lblStartingBal;
+    private javax.swing.JLabel lblUnplanned;
     private javax.swing.JRadioButton rdoByMonth;
     private javax.swing.JRadioButton rdoByWeek;
     private javax.swing.JRadioButton rdoClear;
