@@ -1094,14 +1094,24 @@ public class fmlUi extends javax.swing.JFrame {
         java.sql.Date eomDate = Freaky.getEOM(0);
         java.sql.Date fomDate = Freaky.getFOM(-1);
         ArrayList<CatSummary> catList = sqlite.GetCatSummary(fomDate, eomDate);
-        
+        String data[][] = new String[6][2];
+        //Object rowData[] = new Object[2];
+      for(int i = 0; i < 6; i++){
+          for(int j = 0; j < data[i].length; j++){
+              data[i][0] = catList.get(i).getCategory();
+              int temp = catList.get(i).getAmount();
+              data[i][1] = String.valueOf(temp);
+          }
+          System.out.println(data[i][0] +  " : " + data[i][1]);
+      }
+              
         // first we need to create a ChartModel object
-        ChartModel pie = new ChartModel();
+        //ChartModel pie = new ChartModel();
         
         //now we need to pop up the chart with test data
-        final TableChartPopup tcp = new TableChartPopup(pie.tm); 
-        JPanelPie.add(tcp.GetPieChart());
-        JPanelPie.setVisible(true);
+        //final TableChartPopup tcp = new TableChartPopup(pie.tm); 
+        //JPanelPie.add(tcp.GetPieChart());
+        //JPanelPie.setVisible(true);
         
     }
     

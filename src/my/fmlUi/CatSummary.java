@@ -17,5 +17,11 @@ public class CatSummary {
         this.category = category;
         this.amount = amount;
     }
+    public String getCategory(){
+        return this.category;
+    }
+    public int getAmount(){
+        return this.amount;
+    }
     
 }
