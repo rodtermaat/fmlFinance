@@ -49,8 +49,7 @@ public class fmlUi extends javax.swing.JFrame {
                     
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
     
-    // date used globally to test against current date
-    // should never change
+    // date used globally to test against current date - should never change
     static java.util.Date today = new java.util.Date();
     java.sql.Date sqlToday = new java.sql.Date(today.getTime());
     String stringToday = sdf.format(sqlToday.getTime());
@@ -64,7 +63,6 @@ public class fmlUi extends javax.swing.JFrame {
     // sqlDate used to pass to various function of sqlite class
     // always changing based in user input
     java.sql.Date sqlDate = new java.sql.Date(today.getTime());
-    //SimpleDateFormat sdf2 = new SimpleDateFormat("MM/dd/YYYY");
     
     FreakyDate Freaky = new FreakyDate();
     
@@ -85,31 +83,33 @@ public class fmlUi extends javax.swing.JFrame {
         
         //fill ledger and set radio buttons
         ListTransactionsNew(fomSQL, eomDate);
+        RefreshAnalytics(fomDate, fomSQL, eomDate);
+        
         rdoByMonth.setSelected(true);
         rdoShowAll.setSelected(false);
         rdoByWeek.setSelected(false);
         
         //Analytics date range
-        lblFirstDay.setText(String.valueOf(fomDate));
-        lblLastDay.setText(String.valueOf(eomDate));
+        //lblFirstDay.setText(String.valueOf(fomDate));
+        //lblLastDay.setText(String.valueOf(eomDate));
         
         //Analytics balances
-        int row = (tblLedger.getRowCount() -1);
-        if(row>0){
-        lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
-        lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
-        }
+        //int row = (tblLedger.getRowCount() -1);
+        //if(row>0){
+        //lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+        //lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+        //}
         
         //Analytics summary
-        int groceries = 0; int dining = 0; int gas = 0; int unplanned = 0;
-        groceries = sqlite.getCategorySum(fomSQL, eomDate, "Groceries");
-        dining = sqlite.getCategorySum(fomSQL, eomDate, "Dining");
-        gas = sqlite.getCategorySum(fomSQL, eomDate, "Auto");
-        unplanned = sqlite.getCategorySum(fomSQL, eomDate, "Unplanned");
-        lblGroceries.setText(String.valueOf(groceries));
-        lblDining.setText(String.valueOf(dining));
-        lblGas.setText(String.valueOf(gas));
-        lblUnplanned.setText(String.valueOf(unplanned));
+        //int groceries = 0; int dining = 0; int gas = 0; int unplanned = 0;
+        //groceries = sqlite.getCategorySum(fomSQL, eomDate, "Groceries");
+        //dining = sqlite.getCategorySum(fomSQL, eomDate, "Dining");
+        //gas = sqlite.getCategorySum(fomSQL, eomDate, "Auto");
+        //unplanned = sqlite.getCategorySum(fomSQL, eomDate, "Unplanned");
+        //lblGroceries.setText(String.valueOf(groceries));
+        //lblDining.setText(String.valueOf(dining));
+        //lblGas.setText(String.valueOf(gas));
+        //lblUnplanned.setText(String.valueOf(unplanned));
         
         
         // see of the db is already set up.  0 means there is no table
@@ -526,7 +526,7 @@ public class fmlUi extends javax.swing.JFrame {
         );
         JPanelPieLayout.setVerticalGroup(
             JPanelPieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 156, Short.MAX_VALUE)
+            .addGap(0, 180, Short.MAX_VALUE)
         );
 
         jLabel4.setFont(new java.awt.Font("Lucida Grande", 1, 16)); // NOI18N
@@ -561,7 +561,6 @@ public class fmlUi extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(JPanelPie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -575,7 +574,7 @@ public class fmlUi extends javax.swing.JFrame {
                         .addComponent(jLabel14)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblLastDay)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 45, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -595,6 +594,7 @@ public class fmlUi extends javax.swing.JFrame {
                             .addComponent(lblUnplanned))
                         .addGap(18, 18, 18)))
                 .addContainerGap())
+            .addComponent(JPanelPie, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -643,8 +643,7 @@ public class fmlUi extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -917,16 +916,17 @@ public class fmlUi extends javax.swing.JFrame {
         java.sql.Date fomSQL = Freaky.getFOM(-1);
         java.sql.Date fomDate = Freaky.getActualFOM(0);
         
-        lblFirstDay.setText(String.valueOf(fomDate));
-        lblLastDay.setText(String.valueOf(eomDate));
+        //lblFirstDay.setText(String.valueOf(fomDate));
+        //lblLastDay.setText(String.valueOf(eomDate));
         
         ListTransactionsNew(fomSQL, eomDate);
+        RefreshAnalytics(fomDate, fomSQL, eomDate);
         
-        int row = (tblLedger.getRowCount() -1);
-        if(row>0){
-        lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
-        lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
-        }
+        //int row = (tblLedger.getRowCount() -1);
+        //if(row>0){
+        //lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+        //lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+        //}
     }//GEN-LAST:event_rdoByMonthActionPerformed
     // show Transactions for the current week
     private void rdoByWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoByWeekActionPerformed
@@ -959,17 +959,17 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date fomSQL = Freaky.getFOM(monTracker-1);
             java.sql.Date fomDate = Freaky.getActualFOM(monTracker);
             
-            lblFirstDay.setText(String.valueOf(fomDate));
-            lblLastDay.setText(String.valueOf(eomDate));
+            //lblFirstDay.setText(String.valueOf(fomDate));
+            //lblLastDay.setText(String.valueOf(eomDate));
         
             ListTransactionsNew(fomSQL, eomDate);   
+            RefreshAnalytics(fomDate, fomSQL, eomDate);
             
-            
-            int row = (tblLedger.getRowCount() -1);
-            if(row>0){
-            lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
-            lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
-            }
+            //int row = (tblLedger.getRowCount() -1);
+            //if(row>0){
+            //lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+            //lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+            //}
         }
         if (rdoByWeek.isSelected()){
             
@@ -1003,17 +1003,17 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date fomSQL = Freaky.getFOM(monTracker-1);
             java.sql.Date fomDate = Freaky.getActualFOM(monTracker);
         
-            lblFirstDay.setText(String.valueOf(fomDate));
-            lblLastDay.setText(String.valueOf(eomDate));
+            //lblFirstDay.setText(String.valueOf(fomDate));
+            //lblLastDay.setText(String.valueOf(eomDate));
             
             ListTransactionsNew(fomSQL, eomDate);
-            
+            RefreshAnalytics(fomDate, fomSQL, eomDate);
            
-            int row = (tblLedger.getRowCount() -1);
-            if(row>0){
-            lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
-            lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
-            }
+            //int row = (tblLedger.getRowCount() -1);
+            //if(row>0){
+            //lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+            //lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+            //}
         }
         if (rdoByWeek.isSelected()){
             
@@ -1073,7 +1073,31 @@ public class fmlUi extends javax.swing.JFrame {
         });
     }
     
-    
+    private void RefreshAnalytics(Date dateFrom, Date sqlFrom, Date dateTo){
+        
+        //Analytics date range
+        lblFirstDay.setText(String.valueOf(dateFrom));
+        lblLastDay.setText(String.valueOf(dateTo));
+      
+        int row = (tblLedger.getRowCount() -1);
+        if(row>-1){
+           //Analytics balances
+           lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
+           lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
+        
+           //Analytics summary
+           int groceries = 0; int dining = 0; int gas = 0; int unplanned = 0;
+           groceries = sqlite.getCategorySum(sqlFrom, dateTo, "Groceries");
+           dining = sqlite.getCategorySum(sqlFrom, dateTo, "Dining");
+           gas = sqlite.getCategorySum(sqlFrom, dateTo, "Auto");
+           unplanned = sqlite.getCategorySum(sqlFrom, dateTo, "Unplanned");
+           lblGroceries.setText("$" + String.valueOf((groceries*-1)));
+           lblDining.setText("$" + String.valueOf((dining*-1)));
+           lblGas.setText("$" + String.valueOf((gas*-1)));
+           lblUnplanned.setText("$" + String.valueOf((unplanned*-1)));
+        }
+        
+    }
     
     private void ListTransactionsNew(Date date1, Date dateTo){
       lblCurrentBal.setText(String.valueOf(sqlite.GetBalance(sqlToday)));
@@ -1093,16 +1117,18 @@ public class fmlUi extends javax.swing.JFrame {
         rowData[4] = ledgerList.get(i).getAmount();
         rowData[5] = ledgerList.get(i).gettBalance();
         
-        model.addRow(rowData);
-        
+        model.addRow(rowData); 
       }    
+        tblLedger.getColumnModel().getColumn(0).setWidth(0);
+        tblLedger.getColumnModel().getColumn(0).setMinWidth(0);
+        tblLedger.getColumnModel().getColumn(0).setMaxWidth(0); 
+        
+        DisplayCatSummary();
     }
     
     private void ListTransactions(){
       lblCurrentBal.setText(String.valueOf(sqlite.GetBalance(sqlToday)));
-      //lblForecastDate.setText(futureDatex);
-      //lblEndingBal.setText(String.valueOf(sqlite.GetBalance(sqlFutureDate)));
-     
+      
       //remove all the rows currently in the table
       model.setRowCount(0);
       
@@ -1117,10 +1143,12 @@ public class fmlUi extends javax.swing.JFrame {
         rowData[4] = ledgerList.get(i).getAmount();
         rowData[5] = ledgerList.get(i).gettBalance();
         
-        model.addRow(rowData);
-        
+        model.addRow(rowData); 
       }
-      DisplayCatSummary();
+      tblLedger.getColumnModel().getColumn(0).setWidth(0);
+      tblLedger.getColumnModel().getColumn(0).setMinWidth(0);
+      tblLedger.getColumnModel().getColumn(0).setMaxWidth(0); 
+      //DisplayCatSummary();
     }
     
     private void DisplayCatSummary(){
@@ -1142,12 +1170,12 @@ public class fmlUi extends javax.swing.JFrame {
       }
               
         // first we need to create a ChartModel object
-        //ChartModel pie = new ChartModel();
+        ChartModel pie = new ChartModel(data);
         
         //now we need to pop up the chart with test data
-        //final TableChartPopup tcp = new TableChartPopup(pie.tm); 
-        //JPanelPie.add(tcp.GetPieChart());
-        //JPanelPie.setVisible(true);
+        final TableChartPopup tcp = new TableChartPopup(pie.tm); 
+        JPanelPie.add(tcp.GetPieChart());
+        JPanelPie.setVisible(true);
         
     }
     
@@ -1166,40 +1194,6 @@ public class fmlUi extends javax.swing.JFrame {
             return "PASS";}
         
     }
-    
-    /**
-    private void AddFirstTransaction(){
-        java.util.Date date;
-    
-          int amount = Integer.parseInt(txtAmount.getText());
-          String name = txtName.getText();
-          String category = (String)cmbCategory.getSelectedItem();
-          String idate = txtFormatDate.getText();
-        
-          if (rdoDeposit.isSelected()){}
-          else if (rdoExpense.isSelected()){
-            amount = amount * -1;}
-          else {
-              displayMessage("Select Deposit or Expense");
-          }
-        
-          SimpleDateFormat formatDate = new SimpleDateFormat("MM/dd/yy");
-        
-          try
-          {
-            date = formatDate.parse(idate);
-            sqlDate = new java.sql.Date(date.getTime());
-          }
-          catch(ParseException e) {
-            displayMessage("addTransaction: Enter date like 04/15/18");
-            return;
-          }
-          
-            //add the transaction to db
-            lstInsertID = sqlite.insertTran(sqlDate, category, name, amount);
-            ListTransactions();
-    }
-    **/
     
     private void addTransaction(){
     java.util.Date date;

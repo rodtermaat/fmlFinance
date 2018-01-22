@@ -94,70 +94,10 @@ public class SQLite
         }
  
     }
-    
-    // create the ledger table in the Ledger DB
-    // seem like we should have another name so they do not match
-    /**
-    public void createBalTbl(){
-        
-        String sql = "CREATE TABLE IF NOT EXISTS acctBal (\n" +
-                     " id INTEGER PRIMARY KEY,\n" +
-                     " initialBal INTEGER,\n" +
-                     " currentBal INTEGER,\n" +
-                     " forecastBal INTEGER);";
-          
-        try (Connection conn = DriverManager.getConnection(url);
-                Statement stmt = conn.createStatement()) {
-            // create a new table
-            stmt.execute(sql);
-            if(stmt != null){
-                stmt.close();
-            }
-            if(conn != null) {
-                conn.close();
-            }     
-            //System.out.println("Balance table has been created.");            
-        } catch (SQLException e) {
-            //System.out.println("Create acctTbl error: " + e.getMessage());
-            //System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-        }
-    }
-    **/
-    
-    // add the one and only record into
-    // the balance table
-    /**
-    public void InitBalance(int initialBal, int currentBal, int forecastBal){
-        String sql = "INSERT INTO acctBal(initialBal, currentBal, forecastBal) VALUES(?,?,?)";
-    
-        
-        try (Connection conn = DriverManager.getConnection(url);
-          PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setInt(1,initialBal );
-            pstmt.setInt(2, currentBal);
-            pstmt.setInt(3, forecastBal);
-            pstmt.executeUpdate(); 
-            //System.out.println("Initial Balance added");
-            if(pstmt != null){
-                pstmt.close();
-            }
-            if(conn != null) {
-                conn.close();
-            }     
-        } catch (SQLException e) {
-            //System.out.println("Initial Balance Error: " + e.getMessage());
-        }
-    
-    }
-    **/
-    
-    // check to see if database and tables exist
-    // or do we need to create them
-    
+       
+    // check to see if database and tables exist oe do we need to create it
     public int IsAcctSetup(){
         String sql="SELECT count(*) from ledger";
-        //String sql = "SELECT count(*) from ledger WHERE type='table' AND name='ledger'";
-        //SELECT count(*) FROM sqlite_master WHERE type='table' AND name='table_name';
         int count=0;
         try {
            Class.forName("org.sqlite.JDBC");
@@ -187,9 +127,6 @@ public class SQLite
     }
     
     // get balance based on date
-    // current and forecast
-    // eventually this will have a from and to date to 
-    // scroll they the data by week or month
     public int GetBalance(Date dater){
     String sql = "SELECT SUM(amount) AS balance FROM ledger WHERE date <= ?";
         int balance = 0;
@@ -227,60 +164,47 @@ public class SQLite
         return balance;
     }
     
-    /**
-    public void UpdCurrentBal(int newCurrentBal){
-    
-    int id = 1;
-    String sql = "UPDATE acctBal SET currentBal = ? "
-                + "WHERE id = ?";
- 
-        try (Connection conn = DriverManager.getConnection(url);
-          PreparedStatement pstmt = conn.prepareStatement(sql)) {
- 
-            // set the corresponding param
-            pstmt.setInt(1, newCurrentBal);
-            pstmt.setInt(2, id);
-            // update 
-            pstmt.executeUpdate();
-            //System.out.println("Current Balance updated");
+    public int getCategorySum(Date date1, Date dateTo, String cat){
+        int amtSum = 0;
+        
+        String sql = "SELECT SUM(amount) as sumAmt FROM ledger WHERE\n" +
+                 " category = ? and date > ? and date <= ?";
+        
+        try {
+           Class.forName("org.sqlite.JDBC");
+           Connection conn = DriverManager.getConnection(url);
+           conn.setAutoCommit(false);
+           //System.out.println("Opened database successfully");
+           
+           //Statement stmt = conn.createStatement();
+           PreparedStatement pstmt  = conn.prepareStatement(sql);
+           pstmt.setString(1,cat);
+           pstmt.setDate(2, date1);
+           pstmt.setDate(3, dateTo);
+           ResultSet rs = pstmt.executeQuery();
+           
+           while ( rs.next() ) {
+              amtSum = rs.getInt("sumAmt");
+           }
+           
+           //System.out.println("Check Balance successful");
+            if(rs != null) {
+                rs.close();
+            }
             if(pstmt != null){
                 pstmt.close();
             }
             if(conn != null) {
                 conn.close();
             } 
-            } catch (SQLException e) {
-            //System.out.println("Update Current Balance Error: " + e.getMessage());
-            //System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
-    }
-    
-    public void UpdForecastBal(int newForecastBal){
-
-    int id = 1;
-    String sql = "UPDATE acctBal SET forecastBal = ? "
-                + "WHERE id = ?";
- 
-        try (Connection conn = DriverManager.getConnection(url);
-          PreparedStatement pstmt = conn.prepareStatement(sql)) {
- 
-            // set the corresponding param
-            pstmt.setInt(1, newForecastBal);
-            pstmt.setInt(2, id);
-            pstmt.executeUpdate();
-            //System.out.println("Forecast Balance updated");
-            if(pstmt != null){
-                pstmt.close();
-            }
-            if(conn != null) {
-                conn.close();
-            } 
-        } catch (SQLException e) {
-            //System.out.println("Update Forecast Balance Error: " + e.getMessage());
-            //System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        catch ( Exception e ) {
+           System.out.println("Check Balance Error: " + e.getMessage());
+           System.out.println( e.getClass().getName() + ": " + e.getMessage() );
         }
+                
+        return amtSum;
     }
-    **/
     
     // add a record to the ledger table
     public int insertTran(Date date, String category, String name, int amount) {
@@ -367,51 +291,7 @@ public class SQLite
             //System.out.println("Delete Transaction Error: " + e.getMessage());
         }
     }
-    
-    // right now this just returns the initalBal, but
-    // in the future it would seem like it should
-    // return the object Balance?
-    /**
-    public int checkBal(String balType){
-        String sql = "SELECT * from acctBal;";
-        int initial = 0; int current = 0; int forecast = 0;
-        int value = 0;
-        try {
-           Class.forName("org.sqlite.JDBC");
-           Connection conn = DriverManager.getConnection(url);
-           conn.setAutoCommit(false);
-           //System.out.println("Opened database successfully");
-           
-           Statement stmt = conn.createStatement();
-           ResultSet rs = stmt.executeQuery(sql);
-           
-           while ( rs.next() ) {
-              initial = rs.getInt("initialBal");
-              current = rs.getInt("currentBal");
-              forecast = rs.getInt("forecastBal");
-           }
-           //System.out.println("Check Balance successful");
-            if(rs != null) {
-                rs.close();
-            }
-            if(stmt != null){
-                stmt.close();
-            }
-            if(conn != null) {
-                conn.close();
-            } 
-
-        }
-        catch ( Exception e ) {
-           //System.out.println("Check Balance Error: " + e.getMessage());
-           //System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-        }
-        if(balType == "INITIAL"){ value = initial;}
-        if(balType == "CURRENT"){ value = current;}
-        if(balType == "FORECAST"){ value = forecast;}
-        return value;
-    }
-    **/
+   
 public ArrayList<Transaction> getTransactionsByDate(Date date1, Date date30){
        
 //String sql = "SELECT SUM(amount) AS balance FROM ledger WHERE date <= ?";
@@ -558,7 +438,7 @@ public ArrayList<Transaction> getTransactionsByDate(Date date1, Date date30){
         String sql = "SELECT category, SUM(amount) AS totAmt FROM ledger\n" +
                  " WHERE amount < 0 and\n" +
                  " date > ? and date <= ? GROUP BY category\n" +
-                 " ORDER BY amount";
+                 " ORDER BY totAmt LIMIT 8";
 
         ArrayList<CatSummary> CatSum = new ArrayList<>();
                     // create an ArrayList of the Transaction object and creates
@@ -580,6 +460,8 @@ public ArrayList<Transaction> getTransactionsByDate(Date date1, Date date30){
            while ( rs.next() ) {
               String category = rs.getString("category");
               int totAmt = rs.getInt(("totAmt"));
+            
+              //System.out.println( "Category: " + category + " - " + totAmt);
               
               CatRow = new CatSummary(category, totAmt);
               CatSum.add(CatRow);

@@ -17,19 +17,20 @@ public class ChartModel {
     
     TableModel tm;
     
-    public ChartModel(){
+    public ChartModel(String datam[][]){
         //super("Simple JTable Test");
         //setSize(300, 200); 
         //setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+            
         tm = new AbstractTableModel( ) { 
-            String data[][] = {
-            {"House", "2125"},
-                {"Food", "1250"}, 
-                {"Debt", "725"}, 
-                {"Unplanned", "914"}, 
-                {"Another", "324"}
-            };
+            String data[][] = datam;
+            //String data[][] = {
+            //{"House", "2125"},
+            //    {"Food", "1250"}, 
+            //    {"Debt", "725"}, 
+            //    {"Unplanned", "914"}, 
+            //    {"Another", "324"}
+            //};
         
             //{"Ron", "0.00", "68.68", "77.34", "78.02"},
             //    {"Ravi", "0.00", "70.89", "64.17", "75.00"}, 

@@ -25,6 +25,15 @@ public class FreakyDate {
 		//initializeCalendarData(this.today);
 	}
         
+        public Date getActualFOM(int modifier){
+            Calendar fom = Calendar.getInstance();
+            fom.set(Calendar.DATE, fom.getActualMinimum(Calendar.DATE));
+            fom.add(Calendar.MONTH, + modifier);
+            java.util.Date firstDayOfMonth = fom.getTime();
+            java.sql.Date sqlDate1 = new java.sql.Date(firstDayOfMonth.getTime());
+            
+            return sqlDate1;
+        }
         // returns the end of the month date given a date. also adds or 
         // subtracts based on modifier.  0 retunrs eom current month
         public Date getEOM(int modifier){
