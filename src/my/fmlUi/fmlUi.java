@@ -45,7 +45,7 @@ public class fmlUi extends javax.swing.JFrame {
     int row_num = 0;
     int rec_id = 0;
     int monTracker = 0;
-    int weekTracker = 8;
+    int weekTracker = 7;
 
      ArrayList<Transaction> ledgerList = new ArrayList<Transaction>();
             // ArrayList of the Transaction object
@@ -471,36 +471,36 @@ public class fmlUi extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(rdoDelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rdoUpdate)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(rdoExpense)
+                        .addComponent(rdoUpdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblDebug, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(rdoClear)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDoIt)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cbRepeater)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnAdd)
-                        .addGap(47, 47, 47))))
+                        .addComponent(btnDoIt)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(rdoExpense)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblDebug, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel8))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(355, 355, 355)
+                        .addComponent(cbRepeater)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbCategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtFormatDate, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAdd)
+                    .addComponent(txtFormatDate, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -545,31 +545,41 @@ public class fmlUi extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        lblGroceries.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         lblGroceries.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblGroceries.setText("0000");
 
+        jLabel3.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel3.setText("Groceries");
 
+        lblDining.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         lblDining.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblDining.setText("0000");
 
+        jLabel10.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel10.setText("Dining");
 
+        lblGas.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         lblGas.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblGas.setText("0000");
 
+        jLabel13.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel13.setText("Auto");
 
+        lblUnplanned.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         lblUnplanned.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblUnplanned.setText("0000");
 
-        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel16.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel16.setText("Unplanned");
 
+        lblBudget.setFont(new java.awt.Font("Lucida Grande", 0, 14)); // NOI18N
         lblBudget.setText("Budget Tracking");
 
+        jLabel2.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         jLabel2.setText("Cash");
 
+        lblCash.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
         lblCash.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCash.setText("0000");
 
@@ -579,23 +589,33 @@ public class fmlUi extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblBudget)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(7, 7, 7)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblUnplanned, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblGas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblGroceries, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblDining, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(lblCash, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(57, 57, 57)
+                        .addComponent(lblBudget)
+                        .addGap(98, 98, 98))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblUnplanned))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblGroceries))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblCash, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblDining))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblGas)))
+                        .addGap(18, 18, 18)))
                 .addComponent(JPanelPie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32))
         );
@@ -603,26 +623,27 @@ public class fmlUi extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(lblBudget)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 160, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblCash, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(lblCash))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(lblGroceries))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblDining, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(lblDining))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblGas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(lblGas))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
-                    .addComponent(lblUnplanned)))
+                    .addComponent(lblUnplanned))
+                .addGap(0, 118, Short.MAX_VALUE))
             .addComponent(JPanelPie, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -966,6 +987,7 @@ public class fmlUi extends javax.swing.JFrame {
     }//GEN-LAST:event_rdoShowAllActionPerformed
     // show Transactions for the current month only
     private void rdoByMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoByMonthActionPerformed
+        monTracker = 0;
         rdoShowAll.setSelected(false);
         rdoByWeek.setSelected(false);
         
@@ -973,9 +995,6 @@ public class fmlUi extends javax.swing.JFrame {
         java.sql.Date fomSQL = Freaky.getFOM(-1);
         java.sql.Date fomDate = Freaky.getActualFOM(0);
         jPanel1.setBorder(BorderFactory.createTitledBorder(Freaky.getMonthDesc(0)));
-        
-        //lblFirstDay.setText(String.valueOf(fomDate));
-        //lblLastDay.setText(String.valueOf(eomDate));
         
         ListTransactionsNew(fomSQL, eomDate);
         RefreshAnalytics(fomDate, fomSQL, eomDate);
@@ -989,12 +1008,14 @@ public class fmlUi extends javax.swing.JFrame {
     }//GEN-LAST:event_rdoByMonthActionPerformed
     // show Transactions for the current week
     private void rdoByWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoByWeekActionPerformed
+        weekTracker = 7;
         rdoShowAll.setSelected(false); rdoByMonth.setSelected(false);
         
-        java.sql.Date eowDate = Freaky.getEOW(8);
-        java.sql.Date fowDate = Freaky.getFOW(8);
+        java.sql.Date eowDate = Freaky.getEOW(7);
+        java.sql.Date fowDate = Freaky.getFOW(7);
+        java.sql.Date fowActual = Freaky.getActualFOW(7);
          
-        lblFirstDay.setText(String.valueOf(fowDate));
+        lblFirstDay.setText(String.valueOf(fowActual));
         lblLastDay.setText(String.valueOf(eowDate));
         
         ListTransactionsNew(fowDate, eowDate);
@@ -1035,10 +1056,12 @@ public class fmlUi extends javax.swing.JFrame {
         if (rdoByWeek.isSelected()){
             
             weekTracker = weekTracker+7;
-            java.sql.Date eowDate = Freaky.getEOW(weekTracker-1);
+            java.sql.Date eowDate = Freaky.getEOW(weekTracker);
             java.sql.Date fowDate = Freaky.getFOW(weekTracker);
+            java.sql.Date fowActual = Freaky.getActualFOW(weekTracker);
             
-            lblFirstDay.setText(String.valueOf(fowDate));
+            lblFirstDay.setText(String.valueOf(fowActual));
+            //lblFirstDay.setText(String.valueOf(fowDate));
             lblLastDay.setText(String.valueOf(eowDate));
             
             ListTransactionsNew(fowDate, eowDate);
@@ -1081,10 +1104,12 @@ public class fmlUi extends javax.swing.JFrame {
         if (rdoByWeek.isSelected()){
             
             weekTracker = weekTracker-7;
-            java.sql.Date eowDate = Freaky.getEOW(weekTracker-1);
+            java.sql.Date eowDate = Freaky.getEOW(weekTracker);
             java.sql.Date fowDate = Freaky.getFOW(weekTracker);
+            java.sql.Date fowActual = Freaky.getActualFOW(weekTracker);
             
-            lblFirstDay.setText(String.valueOf(fowDate));
+            lblFirstDay.setText(String.valueOf(fowActual));
+            //lblFirstDay.setText(String.valueOf(fowDate));
             lblLastDay.setText(String.valueOf(eowDate));
             ListTransactionsNew(fowDate, eowDate);
             
@@ -1139,8 +1164,17 @@ public class fmlUi extends javax.swing.JFrame {
     private void RefreshAnalytics(Date dateFrom, Date sqlFrom, Date dateTo){
         
         //Analytics date range
-        lblFirstDay.setText(String.valueOf(dateFrom));
-        lblLastDay.setText(String.valueOf(dateTo));
+        Calendar calFrom = Calendar.getInstance();
+        calFrom.setTime(dateFrom);
+        int month = calFrom.get(Calendar.MONTH) + 1;
+        int day = calFrom.get(Calendar.DAY_OF_MONTH);
+        //lblFirstDay.setText(String.valueOf(dateFrom));
+        lblFirstDay.setText(String.valueOf(month) + " / " + String.valueOf(day));
+        calFrom.setTime(dateTo);
+        month = calFrom.get(Calendar.MONTH) + 1;
+        day = calFrom.get(Calendar.DAY_OF_MONTH);
+        //lblLastDay.setText(String.valueOf(dateTo));
+        lblLastDay.setText(String.valueOf(month) + " / " + String.valueOf(day));
       
         int row = (tblLedger.getRowCount() -1);
         if(row>-1){
