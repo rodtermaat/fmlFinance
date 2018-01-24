@@ -19,7 +19,7 @@ public class TableChartPopup extends JPanel {
         TableChart tc = new TableChart(tm);
         myPanel.setLayout(new BorderLayout());
         myPanel.add(tc,BorderLayout.CENTER);
-        myPanel.setSize(225, 185);
+        myPanel.setSize(280, 240);
         
         //getContentPane( ).add(tc, BorderLayout.CENTER);
         // Use the following line to turn on tooltips: 
