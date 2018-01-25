@@ -1014,18 +1014,19 @@ public class fmlUi extends javax.swing.JFrame {
         java.sql.Date eowDate = Freaky.getEOW(7);
         java.sql.Date fowDate = Freaky.getFOW(7);
         java.sql.Date fowActual = Freaky.getActualFOW(7);
-         
-        lblFirstDay.setText(String.valueOf(fowActual));
-        lblLastDay.setText(String.valueOf(eowDate));
+        
+        //lblFirstDay.setText(String.valueOf(fowActual));
+        //lblLastDay.setText(String.valueOf(eowDate));
         
         ListTransactionsNew(fowDate, eowDate);
+        RefreshAnalytics(fowActual, fowDate, eowDate);
+        DisplayCatSummary(fowDate, eowDate);
         
-        
-        int row = (tblLedger.getRowCount() -1);
-        if(row>0){
-        lblEndingBal.setText("$ " + String.valueOf(model.getValueAt(row,5)));
-        lblStartingBal.setText("$ " + String.valueOf(model.getValueAt(0,5)));
-        }
+        //int row = (tblLedger.getRowCount() -1);
+        //if(row>0){
+        //lblEndingBal.setText("$ " + String.valueOf(model.getValueAt(row,5)));
+        //lblStartingBal.setText("$ " + String.valueOf(model.getValueAt(0,5)));
+        //}
     }//GEN-LAST:event_rdoByWeekActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
@@ -1060,18 +1061,19 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date fowDate = Freaky.getFOW(weekTracker);
             java.sql.Date fowActual = Freaky.getActualFOW(weekTracker);
             
-            lblFirstDay.setText(String.valueOf(fowActual));
+            //lblFirstDay.setText(String.valueOf(fowActual));
             //lblFirstDay.setText(String.valueOf(fowDate));
-            lblLastDay.setText(String.valueOf(eowDate));
+            //lblLastDay.setText(String.valueOf(eowDate));
             
             ListTransactionsNew(fowDate, eowDate);
+            RefreshAnalytics(fowActual, fowDate, eowDate);
+            DisplayCatSummary(fowDate, eowDate);
             
-            
-            int row = (tblLedger.getRowCount() -1);
-            if(row>0){
-            lblEndingBal.setText("$ " + String.valueOf(model.getValueAt(row,5)));
-            lblStartingBal.setText("$ " + String.valueOf(model.getValueAt(0,5)));
-            }
+            //int row = (tblLedger.getRowCount() -1);
+            //if(row>0){
+            //lblEndingBal.setText("$ " + String.valueOf(model.getValueAt(row,5)));
+            //lblStartingBal.setText("$ " + String.valueOf(model.getValueAt(0,5)));
+            //}
         }
         
     }//GEN-LAST:event_btnNextActionPerformed
@@ -1108,17 +1110,19 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date fowDate = Freaky.getFOW(weekTracker);
             java.sql.Date fowActual = Freaky.getActualFOW(weekTracker);
             
-            lblFirstDay.setText(String.valueOf(fowActual));
+            //lblFirstDay.setText(String.valueOf(fowActual));
             //lblFirstDay.setText(String.valueOf(fowDate));
-            lblLastDay.setText(String.valueOf(eowDate));
+            //lblLastDay.setText(String.valueOf(eowDate));
+            
             ListTransactionsNew(fowDate, eowDate);
+            RefreshAnalytics(fowActual, fowDate, eowDate);
+            DisplayCatSummary(fowDate, eowDate);
             
-            
-            int row = (tblLedger.getRowCount() -1);
-            if(row>0){
-            lblEndingBal.setText("$ " + String.valueOf(model.getValueAt(row,5)));
-            lblStartingBal.setText("$ " + String.valueOf(model.getValueAt(0,5)));
-            }
+            //int row = (tblLedger.getRowCount() -1);
+            //if(row>0){
+            //lblEndingBal.setText("$ " + String.valueOf(model.getValueAt(row,5)));
+            //lblStartingBal.setText("$ " + String.valueOf(model.getValueAt(0,5)));
+            //}
         }
     }//GEN-LAST:event_btnPrevActionPerformed
 
@@ -1166,7 +1170,7 @@ public class fmlUi extends javax.swing.JFrame {
         //Analytics date range
         Calendar calFrom = Calendar.getInstance();
         calFrom.setTime(dateFrom);
-        int month = calFrom.get(Calendar.MONTH) + 1;
+        int month = calFrom.get(Calendar.MONTH) + 1;    //month starts at 0
         int day = calFrom.get(Calendar.DAY_OF_MONTH);
         //lblFirstDay.setText(String.valueOf(dateFrom));
         lblFirstDay.setText(String.valueOf(month) + " / " + String.valueOf(day));
@@ -1184,14 +1188,18 @@ public class fmlUi extends javax.swing.JFrame {
         
            //Analytics summary
            int groceries = 0; int dining = 0; int gas = 0; int unplanned = 0;
+           int cash = 0;
            groceries = sqlite.getCategorySum(sqlFrom, dateTo, "Groceries");
            dining = sqlite.getCategorySum(sqlFrom, dateTo, "Dining");
            gas = sqlite.getCategorySum(sqlFrom, dateTo, "Auto");
            unplanned = sqlite.getCategorySum(sqlFrom, dateTo, "Unplanned");
+           cash = sqlite.getCategorySum(sqlFrom, dateTo, "Cash");
            lblGroceries.setText("$" + String.valueOf((groceries*-1)));
            lblDining.setText("$" + String.valueOf((dining*-1)));
            lblGas.setText("$" + String.valueOf((gas*-1)));
            lblUnplanned.setText("$" + String.valueOf((unplanned*-1)));
+           lblCash.setText("$" + String.valueOf(cash*-1));
+           
         }
         
     }
