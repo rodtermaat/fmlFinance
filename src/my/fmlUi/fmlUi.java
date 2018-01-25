@@ -1213,10 +1213,23 @@ public class fmlUi extends javax.swing.JFrame {
       ArrayList<Transaction> ledgerList = sqlite.getTransactionsByDate(date1, dateTo);
       
       Object rowData[] = new Object[6];
+      String prevDate = "";
+      String newDate = "";
       for(int i = 0; i < ledgerList.size(); i++)
       {
+          
         rowData[0] = ledgerList.get(i).getID();
-        rowData[1] = ledgerList.get(i).getDate();
+        
+        newDate = String.valueOf(ledgerList.get(i).getDate());
+        if (newDate.equals(prevDate)){
+            rowData[1] = "";
+        }
+        else{
+            rowData[1] = ledgerList.get(i).getDate();
+            prevDate = String.valueOf(rowData[1]);
+        }
+        //rowData[1] = ledgerList.get(i).getDate();
+        
         rowData[2] = ledgerList.get(i).getCategory();
         rowData[3] = ledgerList.get(i).getName();
         rowData[4] = ledgerList.get(i).getAmount();
