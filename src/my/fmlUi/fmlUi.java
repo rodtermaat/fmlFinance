@@ -117,29 +117,6 @@ public class fmlUi extends javax.swing.JFrame {
         //some final ui adjustments
         lblID.setVisible(false);
         
-        //Analytics date range
-        //lblFirstDay.setText(String.valueOf(fomDate));
-        //lblLastDay.setText(String.valueOf(eomDate));
-        
-        //Analytics balances
-        //int row = (tblLedger.getRowCount() -1);
-        //if(row>0){
-        //lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
-        //lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
-        //}
-        
-        //Analytics summary
-        //int groceries = 0; int dining = 0; int gas = 0; int unplanned = 0;
-        //groceries = sqlite.getCategorySum(fomSQL, eomDate, "Groceries");
-        //dining = sqlite.getCategorySum(fomSQL, eomDate, "Dining");
-        //gas = sqlite.getCategorySum(fomSQL, eomDate, "Auto");
-        //unplanned = sqlite.getCategorySum(fomSQL, eomDate, "Unplanned");
-        //lblGroceries.setText(String.valueOf(groceries));
-        //lblDining.setText(String.valueOf(dining));
-        //lblGas.setText(String.valueOf(gas));
-        //lblUnplanned.setText(String.valueOf(unplanned));
-        
-        
         // see of the db is already set up.  0 means there is no table
         int isReady = sqlite.IsAcctSetup();
         if(isReady == 0){
@@ -232,7 +209,7 @@ public class fmlUi extends javax.swing.JFrame {
 
             },
             new String [] {
-                "id", "date", "category", "name", "amount", "balance"
+                "id", "date", "description", "category", "amount", "balance"
             }
         ) {
             Class[] types = new Class [] {
@@ -251,7 +228,7 @@ public class fmlUi extends javax.swing.JFrame {
             }
         });
         tblLedger.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tblLedger.setShowHorizontalLines(false);
+        tblLedger.setShowGrid(false);
         tblLedger.getTableHeader().setReorderingAllowed(false);
         tblLedger.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -810,23 +787,6 @@ public class fmlUi extends javax.swing.JFrame {
         }
         txtAmount.setText(String.valueOf(amt));
         
-        
-        //String s_amt = String.valueOf(model.getValueAt(i,4));
-        //int amt = Integer.valueOf(s_amt);
-        //if(amt < 0){
-        //    amt = amt * -1;
-        //    rdoExpense.setSelected(true);
-        //}
-        //else{
-        //    rdoDeposit.setSelected(true);
-        //}
-        
-        //txtAmount.setText(String.valueOf(amt));
-        //txtName.setText(String.valueOf(model.getValueAt(i, 3)));
-        //cmbCategory.setSelectedItem(model.getValueAt(i, 2));
-        //String ymddate = String.valueOf(model.getValueAt(i, 1));
-        //String mdydate = FormatDate(ymddate);
-        //txtFormatDate.setText(mdydate);
     }//GEN-LAST:event_tblLedgerMouseClicked
 
     private void rdoClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoClearActionPerformed
@@ -928,46 +888,6 @@ public class fmlUi extends javax.swing.JFrame {
             rdoShowAll.setSelected(true);
             rdoByMonth.setSelected(false);
             rdoByWeek.setSelected(false);
-            
-    //        //validate the data entry
-    //        String validDE = validateDE();
-    //    
-    //        //if data entry passes then make the update
-    //        if(validDE.equals("FAIL")){
-    //            displayMessage("Data Entry failure. Please validate entry.");
-    //        }
-    //        else{
-    //            //validateDE();
-    //      
-    //            // deal with deposit/expense sign
-    //            if(rdoDeposit.isSelected()){
-    //                String s_amt = String.valueOf(txtAmount.getText());
-    //                amt = Integer.valueOf(s_amt);
-    //                amt = amt * -1;
-    //            }
-    //            else{
-    //                String s_amt = String.valueOf(txtAmount.getText());
-    //                amt = Integer.valueOf(s_amt);
-    //            }
-    //    
-    //            
-    //            // do the delete
-    //            // here we need the id to delete
-    //            int i = tblLedger.getSelectedRow();
-    //
-    //            String ids = String.valueOf(model.getValueAt(i, 0));
-    //            int id = Integer.valueOf(ids);
-    //        
-    //            sqlite.deleteTran(id);
-    //    
-    //            // if everything went fine
-    //            //displayMessage("Delete selected");
-    //            clearDE();
-    //            ListTransactions();
-    //            rdoShowAll.setSelected(true);
-    //            rdoByMonth.setSelected(false);
-    //            rdoByWeek.setSelected(false);
-    //        }
         }
     
     }//GEN-LAST:event_btnDoItActionPerformed
@@ -1021,11 +941,6 @@ public class fmlUi extends javax.swing.JFrame {
         RefreshAnalytics(fomDate, fomSQL, eomDate);
         DisplayCatSummary(fomSQL, eomDate);
         
-        //int row = (tblLedger.getRowCount() -1);
-        //if(row>0){
-        //lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
-        //lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
-        //}
     }//GEN-LAST:event_rdoByMonthActionPerformed
     // show Transactions for the current week
     private void rdoByWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoByWeekActionPerformed
@@ -1043,11 +958,6 @@ public class fmlUi extends javax.swing.JFrame {
         RefreshAnalytics(fowActual, fowDate, eowDate);
         DisplayCatSummary(fowDate, eowDate);
         
-        //int row = (tblLedger.getRowCount() -1);
-        //if(row>0){
-        //lblEndingBal.setText("$ " + String.valueOf(model.getValueAt(row,5)));
-        //lblStartingBal.setText("$ " + String.valueOf(model.getValueAt(0,5)));
-        //}
     }//GEN-LAST:event_rdoByWeekActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
@@ -1062,18 +972,10 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date fomDate = Freaky.getActualFOM(monTracker);
             jPanel1.setBorder(BorderFactory.createTitledBorder(Freaky.getMonthDesc(monTracker)));
             
-            //lblFirstDay.setText(String.valueOf(fomDate));
-            //lblLastDay.setText(String.valueOf(eomDate));
-        
             ListTransactionsNew(fomSQL, eomDate);   
             RefreshAnalytics(fomDate, fomSQL, eomDate);
             DisplayCatSummary(fomSQL, eomDate);
             
-            //int row = (tblLedger.getRowCount() -1);
-            //if(row>0){
-            //lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
-            //lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
-            //}
         }
         if (rdoByWeek.isSelected()){
             
@@ -1082,19 +984,9 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date fowDate = Freaky.getFOW(weekTracker);
             java.sql.Date fowActual = Freaky.getActualFOW(weekTracker);
             
-            //lblFirstDay.setText(String.valueOf(fowActual));
-            //lblFirstDay.setText(String.valueOf(fowDate));
-            //lblLastDay.setText(String.valueOf(eowDate));
-            
             ListTransactionsNew(fowDate, eowDate);
             RefreshAnalytics(fowActual, fowDate, eowDate);
             DisplayCatSummary(fowDate, eowDate);
-            
-            //int row = (tblLedger.getRowCount() -1);
-            //if(row>0){
-            //lblEndingBal.setText("$ " + String.valueOf(model.getValueAt(row,5)));
-            //lblStartingBal.setText("$ " + String.valueOf(model.getValueAt(0,5)));
-            //}
         }
         
     }//GEN-LAST:event_btnNextActionPerformed
@@ -1111,18 +1003,9 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date fomDate = Freaky.getActualFOM(monTracker);
             jPanel1.setBorder(BorderFactory.createTitledBorder(Freaky.getMonthDesc(monTracker)));
         
-            //lblFirstDay.setText(String.valueOf(fomDate));
-            //lblLastDay.setText(String.valueOf(eomDate));
-            
             ListTransactionsNew(fomSQL, eomDate);
             RefreshAnalytics(fomDate, fomSQL, eomDate);
             DisplayCatSummary(fomSQL, eomDate);
-           
-            //int row = (tblLedger.getRowCount() -1);
-            //if(row>0){
-            //lblEndingBal.setText(String.valueOf(model.getValueAt(row,5)));
-            //lblStartingBal.setText(String.valueOf(model.getValueAt(0,5)));
-            //}
         }
         if (rdoByWeek.isSelected()){
             
@@ -1130,20 +1013,10 @@ public class fmlUi extends javax.swing.JFrame {
             java.sql.Date eowDate = Freaky.getEOW(weekTracker);
             java.sql.Date fowDate = Freaky.getFOW(weekTracker);
             java.sql.Date fowActual = Freaky.getActualFOW(weekTracker);
-            
-            //lblFirstDay.setText(String.valueOf(fowActual));
-            //lblFirstDay.setText(String.valueOf(fowDate));
-            //lblLastDay.setText(String.valueOf(eowDate));
-            
+             
             ListTransactionsNew(fowDate, eowDate);
             RefreshAnalytics(fowActual, fowDate, eowDate);
             DisplayCatSummary(fowDate, eowDate);
-            
-            //int row = (tblLedger.getRowCount() -1);
-            //if(row>0){
-            //lblEndingBal.setText("$ " + String.valueOf(model.getValueAt(row,5)));
-            //lblStartingBal.setText("$ " + String.valueOf(model.getValueAt(0,5)));
-            //}
         }
     }//GEN-LAST:event_btnPrevActionPerformed
 
@@ -1251,8 +1124,8 @@ public class fmlUi extends javax.swing.JFrame {
         }
         //rowData[1] = ledgerList.get(i).getDate();
         
-        rowData[2] = ledgerList.get(i).getCategory();
-        rowData[3] = ledgerList.get(i).getName();
+        rowData[2] = ledgerList.get(i).getName();
+        rowData[3] = ledgerList.get(i).getCategory();
         rowData[4] = ledgerList.get(i).getAmount();
         rowData[5] = ledgerList.get(i).gettBalance();
         
@@ -1278,8 +1151,8 @@ public class fmlUi extends javax.swing.JFrame {
       {
         rowData[0] = ledgerList.get(i).getID();
         rowData[1] = ledgerList.get(i).getDate();
-        rowData[2] = ledgerList.get(i).getCategory();
-        rowData[3] = ledgerList.get(i).getName();
+        rowData[2] = ledgerList.get(i).getName();
+        rowData[3] = ledgerList.get(i).getCategory();
         rowData[4] = ledgerList.get(i).getAmount();
         rowData[5] = ledgerList.get(i).gettBalance();
         
@@ -1294,8 +1167,6 @@ public class fmlUi extends javax.swing.JFrame {
     private void DisplayCatSummary(Date fomSQL, Date eomDate){
         
         // get the data from SQlite
-        //java.sql.Date eomDate = Freaky.getEOM(0);
-        //java.sql.Date fomSQL = Freaky.getFOM(-1);
         ArrayList<CatSummary> catList = sqlite.GetCatSummary(fomSQL, eomDate);
         int ai = catList.size();
         String data[][] = new String[ai][2];
@@ -1322,8 +1193,7 @@ public class fmlUi extends javax.swing.JFrame {
         
     }
     
-    // this method validates the DE part of the form and 
-    // returns PASS or FAIL to caller
+    // validates the DE part of the form and returns PASS or FAIL to caller
     private String validateDE(){
         if(txtAmount.getText().equals("")){
             return "FAIL";}
@@ -1389,31 +1259,28 @@ public class fmlUi extends javax.swing.JFrame {
     // override table renderer to add customer highlighting to table
     private JComponent HighLightTableRows(DefaultTableModel model)
 	{
-		JTable table = new JTable( model )
-		{
-			public Component prepareRenderer(TableCellRenderer renderer, int row, int column)
-			{
-				Component c = super.prepareRenderer(renderer, row, column);
+        JTable table = new JTable( model ){
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column){
+		Component c = super.prepareRenderer(renderer, row, column);
 
-				//  Color row based on a cell value
+		//  Color row based on a cell value
 
-				if (!isRowSelected(row))
-				{
-					c.setBackground(getBackground());
-					int modelRow = convertRowIndexToModel(row);
-					String type = (String)getModel().getValueAt(modelRow, 2);
-					if ("Savings".equals(type)) c.setBackground(Color.GREEN);
-					if ("Deposit".equals(type)) c.setBackground(Color.YELLOW);
-				}
+                    if (!isRowSelected(row)){
+                        c.setBackground(getBackground());
+                        int modelRow = convertRowIndexToModel(row);
+                        String type = (String)getModel().getValueAt(modelRow, 3);
+                        if ("Savings".equals(type)) c.setBackground(Color.GREEN);
+                        if ("Deposit".equals(type)) c.setBackground(Color.YELLOW);
+                    }
 
-				return c;
-			}
-		};
+                    return c;
+		}
+            };
 
-		table.setPreferredScrollableViewportSize(table.getPreferredSize());
-		table.changeSelection(0, 0, false, false);
-        table.setAutoCreateRowSorter(true);
-		return new JScrollPane( table );
+            table.setPreferredScrollableViewportSize(table.getPreferredSize());
+            table.changeSelection(0, 0, false, false);
+            table.setAutoCreateRowSorter(true);
+            return new JScrollPane( table );
 	}
     
     
