@@ -114,6 +114,9 @@ public class fmlUi extends javax.swing.JFrame {
         rdoShowAll.setSelected(false);
         rdoByWeek.setSelected(false);
         
+        //some final ui adjustments
+        lblID.setVisible(false);
+        
         //Analytics date range
         //lblFirstDay.setText(String.valueOf(fomDate));
         //lblLastDay.setText(String.valueOf(eomDate));
@@ -189,7 +192,7 @@ public class fmlUi extends javax.swing.JFrame {
         btnDoIt = new javax.swing.JButton();
         rdoDeposit = new javax.swing.JRadioButton();
         rdoExpense = new javax.swing.JRadioButton();
-        lblDebug = new javax.swing.JLabel();
+        lblID = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         JPanelPie = new javax.swing.JPanel();
         lblGroceries = new javax.swing.JLabel();
@@ -453,7 +456,7 @@ public class fmlUi extends javax.swing.JFrame {
             }
         });
 
-        lblDebug.setText("debug label");
+        lblID.setText("ID");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -462,24 +465,24 @@ public class fmlUi extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rdoDeposit))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(rdoDelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rdoUpdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(rdoClear)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDoIt)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rdoExpense)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblDebug, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnDoIt))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rdoDeposit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(rdoExpense)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblID)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -512,7 +515,7 @@ public class fmlUi extends javax.swing.JFrame {
                     .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(rdoDeposit)
                     .addComponent(rdoExpense)
-                    .addComponent(lblDebug))
+                    .addComponent(lblID))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
@@ -688,7 +691,7 @@ public class fmlUi extends javax.swing.JFrame {
                                 .addGap(56, 56, 56))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
@@ -781,9 +784,7 @@ public class fmlUi extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAmountKeyTyped
 
     private void tblLedgerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLedgerMouseClicked
-        //java.util.Date date;
-        //String sdate = "";
-        
+       
         int i = tblLedger.getSelectedRow();
         row_num = tblLedger.getSelectedRow();
         
@@ -791,12 +792,15 @@ public class fmlUi extends javax.swing.JFrame {
         int id = Integer.valueOf(ids);
         rec_id = Integer.valueOf(ids);
         
-        lblDebug.setText("row: " + String.valueOf(row_num) + 
-                " record id: " + rec_id);
-        
-        String s_amt = String.valueOf(model.getValueAt(i,4));
+        Transaction xTran = sqlite.GetTransaction(id);
+        lblID.setText(String.valueOf(xTran.getID()));
+        cmbCategory.setSelectedItem(xTran.getCategory());
+        txtName.setText(xTran.getName());
+        String ymddate = String.valueOf(xTran.getDate());
+        String mdydate = FormatDate(ymddate);
+        txtFormatDate.setText(mdydate);       
+        String s_amt = String.valueOf(xTran.getAmount());
         int amt = Integer.valueOf(s_amt);
-        //if(model.getValueAt(i,4).equals("Deposit")){
         if(amt < 0){
             amt = amt * -1;
             rdoExpense.setSelected(true);
@@ -804,18 +808,25 @@ public class fmlUi extends javax.swing.JFrame {
         else{
             rdoDeposit.setSelected(true);
         }
-        
         txtAmount.setText(String.valueOf(amt));
-        //txtAmount.setText(String.valueOf(model.getValueAt(i, 4)));
         
-        txtName.setText(String.valueOf(model.getValueAt(i, 3)));
         
-        cmbCategory.setSelectedItem(model.getValueAt(i, 2));
-        //cmbCategory.setText(String.valueOf(model.getValueAt(i, 3)));
+        //String s_amt = String.valueOf(model.getValueAt(i,4));
+        //int amt = Integer.valueOf(s_amt);
+        //if(amt < 0){
+        //    amt = amt * -1;
+        //    rdoExpense.setSelected(true);
+        //}
+        //else{
+        //    rdoDeposit.setSelected(true);
+        //}
         
-        String ymddate = String.valueOf(model.getValueAt(i, 1));
-        String mdydate = FormatDate(ymddate);
-        txtFormatDate.setText(mdydate);
+        //txtAmount.setText(String.valueOf(amt));
+        //txtName.setText(String.valueOf(model.getValueAt(i, 3)));
+        //cmbCategory.setSelectedItem(model.getValueAt(i, 2));
+        //String ymddate = String.valueOf(model.getValueAt(i, 1));
+        //String mdydate = FormatDate(ymddate);
+        //txtFormatDate.setText(mdydate);
     }//GEN-LAST:event_tblLedgerMouseClicked
 
     private void rdoClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdoClearActionPerformed
@@ -825,6 +836,7 @@ public class fmlUi extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_rdoClearActionPerformed
     private void clearDE(){
+        lblID.setText("");
         txtAmount.setText("");
         txtName.setText("");
         txtFormatDate.setText("");
@@ -894,8 +906,9 @@ public class fmlUi extends javax.swing.JFrame {
             displayMessage("addTransaction: Enter date like 04/15/18");
             return;
           }     
-           
-          String ids = String.valueOf(model.getValueAt(row_num, 0));
+          
+          String ids = String.valueOf(lblID.getText());
+          //String ids = String.valueOf(model.getValueAt(row_num, 0));
           int id = Integer.valueOf(ids);
                 
             //update the transaction to db
@@ -908,45 +921,53 @@ public class fmlUi extends javax.swing.JFrame {
         }
         if (rdoDelete.isSelected()){
           
-            //validate the data entry
-            String validDE = validateDE();
-        
-            //if data entry passes then make the update
-            if(validDE.equals("FAIL")){
-                displayMessage("Data Entry failure. Please validate entry.");
-            }
-            else{
-                //validateDE();
-          
-                // deal with deposit/expense sign
-                if(rdoDeposit.isSelected()){
-                    String s_amt = String.valueOf(txtAmount.getText());
-                    amt = Integer.valueOf(s_amt);
-                    amt = amt * -1;
-                }
-                else{
-                    String s_amt = String.valueOf(txtAmount.getText());
-                    amt = Integer.valueOf(s_amt);
-                }
-        
-                
-                // do the delete
-                // here we need the id to delete
-                int i = tblLedger.getSelectedRow();
-
-                String ids = String.valueOf(model.getValueAt(i, 0));
-                int id = Integer.valueOf(ids);
+            int delID = Integer.valueOf(lblID.getText());
+            sqlite.deleteTran(delID);
+            clearDE();
+            ListTransactions();
+            rdoShowAll.setSelected(true);
+            rdoByMonth.setSelected(false);
+            rdoByWeek.setSelected(false);
             
-                sqlite.deleteTran(id);
-        
-                // if everything went fine
-                //displayMessage("Delete selected");
-                clearDE();
-                ListTransactions();
-                rdoShowAll.setSelected(true);
-                rdoByMonth.setSelected(false);
-                rdoByWeek.setSelected(false);
-            }
+    //        //validate the data entry
+    //        String validDE = validateDE();
+    //    
+    //        //if data entry passes then make the update
+    //        if(validDE.equals("FAIL")){
+    //            displayMessage("Data Entry failure. Please validate entry.");
+    //        }
+    //        else{
+    //            //validateDE();
+    //      
+    //            // deal with deposit/expense sign
+    //            if(rdoDeposit.isSelected()){
+    //                String s_amt = String.valueOf(txtAmount.getText());
+    //                amt = Integer.valueOf(s_amt);
+    //                amt = amt * -1;
+    //            }
+    //            else{
+    //                String s_amt = String.valueOf(txtAmount.getText());
+    //                amt = Integer.valueOf(s_amt);
+    //            }
+    //    
+    //            
+    //            // do the delete
+    //            // here we need the id to delete
+    //            int i = tblLedger.getSelectedRow();
+    //
+    //            String ids = String.valueOf(model.getValueAt(i, 0));
+    //            int id = Integer.valueOf(ids);
+    //        
+    //            sqlite.deleteTran(id);
+    //    
+    //            // if everything went fine
+    //            //displayMessage("Delete selected");
+    //            clearDE();
+    //            ListTransactions();
+    //            rdoShowAll.setSelected(true);
+    //            rdoByMonth.setSelected(false);
+    //            rdoByWeek.setSelected(false);
+    //        }
         }
     
     }//GEN-LAST:event_btnDoItActionPerformed
@@ -1272,7 +1293,6 @@ public class fmlUi extends javax.swing.JFrame {
     
     private void DisplayCatSummary(Date fomSQL, Date eomDate){
         
-        lblDebug.setText(fomSQL + " - " + eomDate);
         // get the data from SQlite
         //java.sql.Date eomDate = Freaky.getEOM(0);
         //java.sql.Date fomSQL = Freaky.getFOM(-1);
@@ -1427,12 +1447,12 @@ public class fmlUi extends javax.swing.JFrame {
     private javax.swing.JLabel lblBudget;
     private javax.swing.JLabel lblCash;
     private javax.swing.JLabel lblCurrentBal;
-    private javax.swing.JLabel lblDebug;
     private javax.swing.JLabel lblDining;
     private javax.swing.JLabel lblEndingBal;
     private javax.swing.JLabel lblFirstDay;
     private javax.swing.JLabel lblGas;
     private javax.swing.JLabel lblGroceries;
+    private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblLastDay;
     private javax.swing.JLabel lblMessage;
     private javax.swing.JLabel lblStartingBal;

@@ -86,7 +86,7 @@ public class FreakyDate {
             //System.out.println("eow - adding " + lastdaymodifier + " + 1 to get to Sunday");
             java.util.Date lastDateOfWeek = eow.getTime();
             java.sql.Date sqlDate7 = new java.sql.Date(lastDateOfWeek.getTime());
-            System.out.println("eow - returning " + sqlDate7);
+            //System.out.println("eow - returning " + sqlDate7);
             return sqlDate7;
         
         }
@@ -107,7 +107,7 @@ public class FreakyDate {
             //System.out.println("fow - now subtracting 7 to get day before Monday");
             java.util.Date firstDateOfWeek = fow.getTime();
             java.sql.Date sqlDate1 = new java.sql.Date(firstDateOfWeek.getTime());
-            System.out.println("fow SQL - returning " + sqlDate1);
+            //System.out.println("fow SQL - returning " + sqlDate1);
             return sqlDate1;
         }
         
@@ -116,18 +116,18 @@ public class FreakyDate {
         
             Calendar fow = Calendar.getInstance();
             dayofweek = fow.get(Calendar.DAY_OF_WEEK);
-            System.out.println("fow actual - day of week today is " + dayofweek);
+            //System.out.println("fow actual - day of week today is " + dayofweek);
             int lastdaymodifier = modifier - dayofweek;
-            System.out.println("fow actual - lastdaymodifier = " + modifier + " - " + dayofweek);
+            //System.out.println("fow actual - lastdaymodifier = " + modifier + " - " + dayofweek);
             fow.add(Calendar.DAY_OF_WEEK,  + lastdaymodifier +1);
-            System.out.println("fow actual - adding " + lastdaymodifier + " + 1 to get to Sunday");
+            //System.out.println("fow actual - adding " + lastdaymodifier + " + 1 to get to Sunday");
             // now that we know the last date of the week we can minus 8 to 
             // get the first date of the week
             fow.add(Calendar.DAY_OF_WEEK,  - 6);
-            System.out.println("fow actual - now subtracting 6 to get Monday");
+            //System.out.println("fow actual - now subtracting 6 to get Monday");
             java.util.Date firstDateOfWeek = fow.getTime();
             java.sql.Date sqlDate1 = new java.sql.Date(firstDateOfWeek.getTime());
-            System.out.println("fow actual  - returning " + sqlDate1);
+            //System.out.println("fow actual  - returning " + sqlDate1);
             return sqlDate1;
         }
         

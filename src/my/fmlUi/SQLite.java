@@ -126,6 +126,53 @@ public class SQLite
         return count;
     }
     
+    // get tranaction to populate DE.  need when we started messing with 
+    // the data display in the table
+    public Transaction GetTransaction(int id){
+        int idx = 0; String category = ""; String name = "";
+        int amount = 0; int balance = 0;
+        Transaction tran = null;
+        
+        String sql = "SELECT * from ledger WHERE id = ?";
+        try {
+           Class.forName("org.sqlite.JDBC");
+           Connection conn = DriverManager.getConnection(url);
+           conn.setAutoCommit(false);
+           //System.out.println("Opened database successfully");
+           
+           //Statement stmt = conn.createStatement();
+           PreparedStatement pstmt  = conn.prepareStatement(sql);
+           pstmt.setInt(1,id);
+           ResultSet rs = pstmt.executeQuery();
+           
+           while ( rs.next() ) {
+              idx = rs.getInt("id");
+              Date date = rs.getDate("date");
+              category = rs.getString("category");
+              name = rs.getString("name");
+              amount = rs.getInt("amount");
+              
+              tran = new Transaction(idx, date, category, name, amount, 0);
+           }
+           
+           //System.out.println("Check Balance successful");
+            if(rs != null) {
+                rs.close();
+            }
+            if(pstmt != null){
+                pstmt.close();
+            }
+            if(conn != null) {
+                conn.close();
+            } 
+        }
+        catch ( Exception e ) {
+           System.out.println("Check Balance Error: " + e.getMessage());
+           System.out.println( e.getClass().getName() + ": " + e.getMessage() );
+        }
+      
+        return tran;
+    }
     // get balance based on date
     public int GetBalance(Date dater){
     String sql = "SELECT SUM(amount) AS balance FROM ledger WHERE date <= ?";
