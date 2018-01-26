@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
+import java.text.DateFormat;
 import java.util.Calendar;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -1107,14 +1108,30 @@ public class fmlUi extends javax.swing.JFrame {
       ArrayList<Transaction> ledgerList = sqlite.getTransactionsByDate(date1, dateTo);
       
       Object rowData[] = new Object[6];
+      java.util.Date datey = null;
       String prevDate = "";
       String newDate = "";
+      String tempDate = "";
+      String cat = "";
       for(int i = 0; i < ledgerList.size(); i++)
       {
           
         rowData[0] = ledgerList.get(i).getID();
         
         newDate = String.valueOf(ledgerList.get(i).getDate());
+        
+//        tempDate = String.valueOf(ledgerList.get(i).getDate());
+//        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+//        
+//        try{datey = format.parse(tempDate);}
+//        catch(ParseException e){}
+//        
+//        Calendar calx = Calendar.getInstance();
+//        calx.setTime(datey);
+//        int month = calx.get(Calendar.MONTH) + 1;    //month starts at 0
+//        int day = calx.get(Calendar.DAY_OF_MONTH);
+//        newDate = String.valueOf(month) + "/" + String.valueOf(day);
+        
         if (newDate.equals(prevDate)){
             rowData[1] = "";
         }
@@ -1124,8 +1141,18 @@ public class fmlUi extends javax.swing.JFrame {
         }
         //rowData[1] = ledgerList.get(i).getDate();
         
-        rowData[2] = ledgerList.get(i).getName();
-        rowData[3] = ledgerList.get(i).getCategory();
+        cat = String.valueOf(ledgerList.get(i).getCategory());
+        if(cat.equals("Cash")||cat.equals("Savings")||cat.equals("Auto")
+                ||cat.equals("Groceries")||cat.equals("Dining")
+                ||cat.equals("Unplanned")){
+            rowData[2] = "";
+            rowData[3] = ledgerList.get(i).getCategory();
+        }else{
+            rowData[2] = ledgerList.get(i).getName();
+            rowData[3] = "";
+        }
+        
+        //rowData[3] = ledgerList.get(i).getCategory();
         rowData[4] = ledgerList.get(i).getAmount();
         rowData[5] = ledgerList.get(i).gettBalance();
         
